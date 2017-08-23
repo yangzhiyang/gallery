@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: #fff;
+                color: #555;
+                font-size: 14px;
+            }
+            .wrap {
+                width: 100%;
+                height: 600px;
+                position: absolute;
+                top: 50%;
+                margin-top: -300px;
+                background: #333;
+                overflow: hidden;
+            }
+            .photo {
+                width :260px;
+                height: 320px;
+                position: absolute;
+                z-index: 1;
+                box-shadow: 0 0 1px rgba(0,0,0,.01);
+                
+            }
+            .photo .side {
+                width: 100%;
+                height: 100%;
+                background: #eee;
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 20px;
+                box-sizing: border-box;
+                border-radius: 3px;
+                /* 设置元素不面向屏幕时隐藏 */
+                backface-visibility:hidden;
+            }
+            .photo .front .image {
+                width: 100%;
+                height: 250px;
+                line-height: 250px;
+                overflow: hidden;
+            }
+            .photo .front .image img {
+                width: 100%;
+
+            }
+            .photo .front .title {
+                text-align: center;
+                font-size: 16px;
+                line-height: 50px;
+            }
+            .photo .back .describe {
+                color: #666;
+                font-size: 14px;
+                line-height: 1.5em;
+            }
+            .center {
+                left: 50%;
+                top : 50%;
+                transform: translate(-50%,-50%);
+                z-index: 999;
+            }
+            .photo-wrap {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                /* 设置子元素的3D效果 */
+                transform-style: preserve-3d;
+                transition: all .5s;
+            }
+            .photo-wrap .front {
+                transform:  rotateY(0deg);
+            }
+            .photo-wrap .back {
+                transform:  rotateY(180deg);
+            }
+            .photo-front .photo-wrap {
+                transform: perspective(800px) rotateY(0deg);
+            }
+            .photo-back .photo-wrap {
+                transform: perspective(800px) rotateY(180deg);
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="wrap" class="wrap">
+            <div id="photo_{{index}}"class="photo photo-front">
+                <div class="photo-wrap">
+                    <div class="side front" >
+                            <p class="image">
+                                <img src="{{img}}" alt="photo">
+                            </p>
+                            <p class="title">{{title}}</p>
+                    </div>
+                    <div class="side back">
+                        <p class="describe">{{describe}}</p>
+                    </div> 
+                </div>                
+            </div>
+        </div>
+        <script src="data.js"></script>  
+        <script>
+            //随机生成图片序号 0~19之间
+            function random(min,max){
+                var num = Math.floor(Math.random()*(max-min)+min)
+                return num 
+            }
+            //输出所有数据
+            var data = data
+            function addPhotos() {
+                var temp = document.querySelector('#wrap').innerHTML
+                var html = []               
+                for(let i=0;i<data.length;i++) {
+                     var _html = temp.replace('{{index}}',i)
+                                    .replace('{{img}}',data[i].img)
+                                    .replace('{{title}}',data[i].title)
+                                    .replace('{{describe}}',data[i].describe)
+                    html.push(_html)
+                }
+                document.querySelector('#wrap').innerHTML = html.join(' ')
+                reSort(random(0,data.length))
+
+            }
+            addPhotos()
+            //图片排序
+            function reSort(n) {
+                var _photo = document.querySelectorAll('.photo')
+                var photos = []
+                 for(let i=0;i<_photo.length;i++){
+                     _photo[i].className = _photo[i].className.replace(/\s*center\s*/,' ')
+                     //形成标准数组
+                     photos.push(_photo[i])
+                 }
+                var photoCenter = document.querySelector('#photo_'+n)
+                photoCenter.className += ' center'
+                photoCenter = photos.splice(n,1)[0]
+
+                //划分图片左右分区
+                var photosLeft = photos.splice(0,Math.floor(photos.length/2)),
+                    photosRight = photos,
+                    photoWidth = document.querySelector('.photo').clientWidth,
+                    photoHeight = document.querySelector('.photo').clientHeight,
+                    wrapWidth = document.querySelector('#wrap').clientWidth,
+                    wrapHeight = document.querySelector('#wrap').clientHeight
+                 for(let i=0;i<photosLeft.length;i++){
+                     //左分区图片分布范围
+                     //0-photoWidth < left < warpWidth/2-photoWidth/2
+                     //0-photoHeight < top < wrapHeight
+                    photosLeft[i].style.left = random(0-photoWidth,wrapWidth/2-photoWidth/2)+'px'
+                    photosLeft[i].style.top = random(0-photoHeight,wrapHeight)+'px'
+                    photosLeft[i].style['transform'] = 'rotate('+random(-120,120)+'deg)'
+                 }
+                 for(let i=0;i<photosRight.length;i++){
+                     //右分区图片分布范围
+                     //0-photoWidth < right < warpWidth/2-photoWidth/2
+                     //0-photoHeight < top < wrapHeight
+                     photosRight[i].style.right = random(0-photoWidth,wrapWidth/2-photoWidth/2)+'px'
+                    photosRight[i].style.top = random(0-photoHeight,wrapHeight)+'px'
+                    photosRight[i].style['transform'] = 'rotate('+random(-120,120)+'deg)'
+                }     
+            }
+            //图片翻转
+            var photo =document.querySelectorAll('.photo')
+            console.log(photo)
+            for(let i=0;i<photo.length;i++){
+                
+                photo[i].addEventListener('click',function(){
+                    var clsName = photo[i].className
+                    if(/photo-front/.test(clsName)){                   
+                        clsName = clsName.replace(/photo-front/,'photo-back') 
+                    }else{
+                        clsName = clsName.replace(/photo-back/,'photo-front') 
+                    }
+                    return photo[i].className = clsName
+                })
+            }
+
+        </script>
+    </body>
+</html>
