@@ -90,6 +90,32 @@
             .photo-back .photo-wrap {
                 transform: perspective(800px) rotateY(180deg);
             }
+            .nav {
+                width: 80%;
+                height: 30px;
+                line-height: 30px;
+                position: absolute;
+                left: 10%;
+                bottom: 20px;
+                z-index: 999;
+                text-align: center;
+            }
+            .nav .i {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                cursor: pointer;
+                background: #aaa;
+                text-align: center;
+                border-radius: 50%; 
+                transform: scale(.55)
+            }
+            .nav .i_current {
+                transform: scale(1)
+            }
+            .nav .i_back {
+                transform: rotateY(-180deg)
+            }
 
         </style>
     </head>
@@ -111,7 +137,7 @@
         </div>
         <script src="data.js"></script>  
         <script>
-            //随机生成图片序号 0~19之间
+            //随机生成序号
             function random(min,max){
                 var num = Math.floor(Math.random()*(max-min)+min)
                 return num 
@@ -120,14 +146,17 @@
             var data = data
             function addPhotos() {
                 var temp = document.querySelector('#wrap').innerHTML
-                var html = []               
+                var html = [] 
+                var nav = []              
                 for(let i=0;i<data.length;i++) {
                      var _html = temp.replace('{{index}}',i)
                                     .replace('{{img}}',data[i].img)
                                     .replace('{{title}}',data[i].title)
                                     .replace('{{describe}}',data[i].describe)
                     html.push(_html)
+                    nav.push('<span id="nav_'+i+'" class="i">&nbsp</span>')
                 }
+                html.push('<div class="nav">'+ nav.join('') +'</div>')
                 document.querySelector('#wrap').innerHTML = html.join(' ')
                 reSort(random(0,data.length))
 
@@ -136,19 +165,23 @@
             //图片排序
             function reSort(n) {
                 var _photo = document.querySelectorAll('.photo')
-                var photos = []
+                var _photos = []
+                var navs = document.querySelectorAll('.i')
                  for(let i=0;i<_photo.length;i++){
                      _photo[i].className = _photo[i].className.replace(/\s*center\s*/,' ')
                      //形成标准数组
-                     photos.push(_photo[i])
+                     _photos.push(_photo[i])
                  }
-                var photoCenter = document.querySelector('#photo_'+n)
+                var photoCenter = document.querySelector('#photo_'+n),
+                    navCurrent = document.querySelector('#nav_'+n)
                 photoCenter.className += ' center'
-                photoCenter = photos.splice(n,1)[0]
+                photoCenter = _photos.splice(n,1)[0]
+
+
 
                 //划分图片左右分区
-                var photosLeft = photos.splice(0,Math.floor(photos.length/2)),
-                    photosRight = photos,
+                var photosLeft = _photos.splice(0,Math.floor(_photos.length/2)),
+                    photosRight = _photos,
                     photoWidth = document.querySelector('.photo').clientWidth,
                     photoHeight = document.querySelector('.photo').clientHeight,
                     wrapWidth = document.querySelector('#wrap').clientWidth,
@@ -165,24 +198,43 @@
                      //右分区图片分布范围
                      //0-photoWidth < right < warpWidth/2-photoWidth/2
                      //0-photoHeight < top < wrapHeight
-                     photosRight[i].style.right = random(0-photoWidth,wrapWidth/2-photoWidth/2)+'px'
+                    photosRight[i].style.right = random(0-photoWidth,wrapWidth/2-photoWidth/2)+'px'
                     photosRight[i].style.top = random(0-photoHeight,wrapHeight)+'px'
                     photosRight[i].style['transform'] = 'rotate('+random(-120,120)+'deg)'
-                }     
+                } 
+                for(let i=0;i<navs.length;i++){
+                    navs[i].className = navs[i].className.replace(/\s*i_current\s*/,' ')
+                    navs[i].className = navs[i].className.replace(/\s*i_current\s*/,' ')
+                } 
+                navCurrent.className += ' i_current'
+
+
             }
             //图片翻转
-            var photo =document.querySelectorAll('.photo')
-            console.log(photo)
-            for(let i=0;i<photo.length;i++){
-                
-                photo[i].addEventListener('click',function(){
-                    var clsName = photo[i].className
+            var photos =document.querySelectorAll('.photo')
+            var navs = document.querySelectorAll('.i')
+            //点击图片翻转
+            for(let i=0;i<photos.length;i++){               
+                photos[i].addEventListener('click',function(){
+                    var clsName = photos[i].className
                     if(/photo-front/.test(clsName)){                   
                         clsName = clsName.replace(/photo-front/,'photo-back') 
                     }else{
                         clsName = clsName.replace(/photo-back/,'photo-front') 
                     }
-                    return photo[i].className = clsName
+                    return photos[i].className = clsName
+                })
+            }
+            //导航栏点击翻转
+            for(let i=0;i<navs.length;i++){
+                navs[i].addEventListener('click',function(){
+                    var clsName = photos[i].className
+                    if(/photo-front/.test(clsName)){                   
+                        clsName = clsName.replace(/photo-front/,'photo-back') 
+                    }else{
+                        clsName = clsName.replace(/photo-back/,'photo-front') 
+                    }
+                    return photos[i].className = clsName
                 })
             }
             // 待完善： 1. 导航栏

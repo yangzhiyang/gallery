@@ -126,5 +126,4 @@ for(var i=0;i<d.length;i++){
     img: c[0].split('、')[1] + '.jpg',
     describe: c[1]
   })
-  console.log(c[0].replace('、',' ') + '.jpg');
 }
