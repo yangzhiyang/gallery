@@ -5,6 +5,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
+            @font-face {
+                font-family: 'iconfont';  /* project id 398277 */
+                src: url('./iconfont.woff') format('woff');
+            }
             *{
                 margin: 0;
                 padding: 0;
@@ -29,6 +33,7 @@
                 position: absolute;
                 z-index: 1;
                 box-shadow: 0 0 1px rgba(0,0,0,.01);
+                transition: all .8s;
                 
             }
             .photo .side {
@@ -90,6 +95,7 @@
             .photo-back .photo-wrap {
                 transform: perspective(800px) rotateY(180deg);
             }
+            /* 导航条样式 */
             .nav {
                 width: 80%;
                 height: 30px;
@@ -108,10 +114,24 @@
                 background: #aaa;
                 text-align: center;
                 border-radius: 50%; 
-                transform: scale(.55)
+                transform: scale(.55);
+                transition: all .8s;
+            }
+            .nav .i:after{
+                content: "\e7a1";
+                font-family: "iconfont";
+                font-size: 100%;
+                display: inline-block;
+                line-height: 30px;
+                text-align: center;
+                color: #fff;
+                opacity: 0;
             }
             .nav .i_current {
-                transform: scale(1)
+                transform: scale(1);
+            }
+            .nav .i_current:after {
+                opacity: 1;
             }
             .nav .i_back {
                 transform: rotateY(-180deg)
@@ -169,6 +189,12 @@
                 var navs = document.querySelectorAll('.i')
                  for(let i=0;i<_photo.length;i++){
                      _photo[i].className = _photo[i].className.replace(/\s*center\s*/,' ')
+                     _photo[i].className = _photo[i].className.replace(/\s*photo_front\s*/,' ')
+                     _photo[i].className = _photo[i].className.replace(/\s*photo_back\s*/,' ')
+                     _photo[i].style.left = ''
+                     _photo[i].style.top = ''
+                     _photo[i].style.right = ''     
+                     _photo[i].style.transform= ''
                      //形成标准数组
                      _photos.push(_photo[i])
                  }
@@ -176,9 +202,6 @@
                     navCurrent = document.querySelector('#nav_'+n)
                 photoCenter.className += ' center'
                 photoCenter = _photos.splice(n,1)[0]
-
-
-
                 //划分图片左右分区
                 var photosLeft = _photos.splice(0,Math.floor(_photos.length/2)),
                     photosRight = _photos,
@@ -204,7 +227,7 @@
                 } 
                 for(let i=0;i<navs.length;i++){
                     navs[i].className = navs[i].className.replace(/\s*i_current\s*/,' ')
-                    navs[i].className = navs[i].className.replace(/\s*i_current\s*/,' ')
+                    navs[i].className = navs[i].className.replace(/\s*i_back\s*/,' ')
                 } 
                 navCurrent.className += ' i_current'
 
@@ -217,10 +240,15 @@
             for(let i=0;i<photos.length;i++){               
                 photos[i].addEventListener('click',function(){
                     var clsName = photos[i].className
+                    if(!/center/.test(clsName)){
+                        return reSort(i)
+                    }
                     if(/photo-front/.test(clsName)){                   
                         clsName = clsName.replace(/photo-front/,'photo-back') 
+                        navs[i].className += ' i_back'
                     }else{
                         clsName = clsName.replace(/photo-back/,'photo-front') 
+                        navs[i].className = navs[i].className.replace(/\s*i_back\s*/,' ')
                     }
                     return photos[i].className = clsName
                 })
@@ -229,20 +257,24 @@
             for(let i=0;i<navs.length;i++){
                 navs[i].addEventListener('click',function(){
                     var clsName = photos[i].className
+                    if(!/center/.test(clsName)){
+                        return reSort(i)
+                    }
                     if(/photo-front/.test(clsName)){                   
                         clsName = clsName.replace(/photo-front/,'photo-back') 
+                        navs[i].className += ' i_back'
+
                     }else{
                         clsName = clsName.replace(/photo-back/,'photo-front') 
+                        navs[i].className = navs[i].className.replace(/\s*i_back\s*/,' ')
+
                     }
                     return photos[i].className = clsName
                 })
             }
-            // 待完善： 1. 导航栏
-            //         2. 点击导航栏跳转指定图片，位置排列到中间，其他图片并重新排列图片位置
-            //         3. 点击指定图片，该图片位置排列到中间，其他图片重新排列
-            //         4. 排列动画效果
-            //         5. 完善图片及内容
-            //         6. 代码优化封装
+            // 待完善： 
+            //         1. 完善图片及内容
+            //         2. 代码优化封装
         </script>
     </body>
 </html>
