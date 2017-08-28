@@ -72,7 +72,7 @@
             .center {
                 left: 50%;
                 top : 50%;
-                transform: translate(-50%,-50%);
+                transform: translate(-50%,-50%) scale(1);
                 z-index: 999;
             }
             .photo-wrap {
@@ -90,10 +90,10 @@
                 transform:  rotateY(180deg);
             }
             .photo-front .photo-wrap {
-                transform: perspective(800px) rotateY(0deg);
+                transform: perspective(800px) rotateY(0deg) translate(0,0);
             }
             .photo-back .photo-wrap {
-                transform: perspective(800px) rotateY(180deg);
+                transform: perspective(800px) rotateY(180deg) translate(-100px,0);
             }
             /* 导航条样式 */
             .nav {
@@ -136,6 +136,13 @@
             .nav .i_back {
                 transform: rotateY(-180deg)
             }
+            /* 所有图片初始定位到中间位置
+            解决重新排列图片时中间位置的图片短暂消失的问题  */
+            .photo {
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%,-50%) scale(1);
+            }
 
         </style>
     </head>
@@ -157,7 +164,7 @@
         </div>
         <script src="data.js"></script>  
         <script>
-            //随机生成序号
+            //生成随机数
             function random(min,max){
                 var num = Math.floor(Math.random()*(max-min)+min)
                 return num 
@@ -215,15 +222,21 @@
                      //0-photoHeight < top < wrapHeight
                     photosLeft[i].style.left = random(0-photoWidth,wrapWidth/2-photoWidth/2)+'px'
                     photosLeft[i].style.top = random(0-photoHeight,wrapHeight)+'px'
-                    photosLeft[i].style['transform'] = 'rotate('+random(-120,120)+'deg)'
+                    photosLeft[i].style['transform'] = 'rotate('+random(-120,120)+'deg) scale(.8)'
+                    console.log(wrapWidth/2-photoWidth/2);
+
                  }
                  for(let i=0;i<photosRight.length;i++){
                      //右分区图片分布范围
                      //0-photoWidth < right < warpWidth/2-photoWidth/2
                      //0-photoHeight < top < wrapHeight
-                    photosRight[i].style.right = random(0-photoWidth,wrapWidth/2-photoWidth/2)+'px'
+                     //右分区定位改用left为了覆盖初始定位left：50%
+                    photosRight[i].style.left = wrapWidth - random(0-photoWidth,wrapWidth/2-photoWidth/2)+'px'
                     photosRight[i].style.top = random(0-photoHeight,wrapHeight)+'px'
-                    photosRight[i].style['transform'] = 'rotate('+random(-120,120)+'deg)'
+                    photosRight[i].style['transform'] = 'rotate('+random(-120,120)+'deg) scale(.8)'
+                    
+                    
+
                 } 
                 for(let i=0;i<navs.length;i++){
                     navs[i].className = navs[i].className.replace(/\s*i_current\s*/,' ')
