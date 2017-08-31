@@ -1,0 +1,140 @@
+            @font-face {
+                font-family: 'iconfont';  /* project id 398277 */
+                src: url('./iconfont.woff') format('woff');
+            }
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            body {
+                background: #fff;
+                color: #555;
+                font-size: 14px;
+            }
+            .wrap {
+                width: 100%;
+                height: 600px;
+                position: absolute;
+                top: 50%;
+                margin-top: -300px;
+                background: #333;
+                overflow: hidden;
+            }
+            .photo {
+                width :260px;
+                height: 320px;
+                position: absolute;
+                z-index: 1;
+                box-shadow: 0 0 1px rgba(0,0,0,.01);
+                transition: all .8s;
+                
+            }
+            .photo .side {
+                width: 100%;
+                height: 100%;
+                background: #eee;
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 20px;
+                box-sizing: border-box;
+                border-radius: 3px;
+                /* 设置元素不面向屏幕时隐藏 safari下需加-webkit-才正常*/
+                -webkit-backface-visibility:hidden;
+            }
+            .photo .front .image {
+                width: 100%;
+                height: 250px;
+                line-height: 250px;
+                overflow: hidden;
+            }
+            .photo .front .image img {
+                width: 100%;
+
+            }
+            .photo .front .title {
+                text-align: center;
+                font-size: 16px;
+            }
+            .photo .back {
+                overflow: hidden;
+            }
+            .photo .back .describe {
+                color: #666;
+                font-size: 14px;
+                line-height: 1.5em;
+            }
+            .center {
+                left: 50%;
+                top : 50%;
+                transform: translate(-50%,-50%) scale(1);
+                z-index: 999;
+            }
+            .photo-wrap {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                /* 设置子元素的3D效果 */
+                transform-style: preserve-3d;
+                transition: all .5s;
+            }
+            .photo-wrap .front {
+                transform:  rotateY(0deg);
+            }
+            .photo-wrap .back {
+                transform:  rotateY(180deg);
+            }
+            .photo-front .photo-wrap {
+                transform: perspective(800px) rotateY(0deg) translate(0,0);
+            }
+            .photo-back .photo-wrap {
+                transform: perspective(800px) rotateY(180deg) translate(-100px,0);
+            }
+            /* 导航条样式 */
+            .nav {
+                width: 80%;
+                height: 30px;
+                line-height: 30px;
+                position: absolute;
+                left: 10%;
+                bottom: 20px;
+                z-index: 999;
+                text-align: center;
+            }
+            .nav .i {
+                display: inline-block;
+                width: 30px;
+                height: 30px;
+                cursor: pointer;
+                background: #aaa;
+                text-align: center;
+                border-radius: 50%; 
+                transform: scale(.55);
+                transition: all .8s;
+            }
+            .nav .i:after{
+                content: "\e7a1";
+                font-family: "iconfont";
+                font-size: 100%;
+                display: inline-block;
+                line-height: 30px;
+                text-align: center;
+                color: #fff;
+                opacity: 0;
+            }
+            .nav .i_current {
+                transform: scale(1);
+            }
+            .nav .i_current:after {
+                opacity: 1;
+            }
+            .nav .i_back {
+                transform: rotateY(-180deg)
+            }
+            /* 所有图片初始定位到中间位置
+            解决重新排列图片时中间位置的图片短暂消失的问题  */
+            .photo {
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%,-50%) scale(1);
+            }
