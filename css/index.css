@@ -40,7 +40,7 @@
                 box-sizing: border-box;
                 border-radius: 3px;
                 /* 设置元素不面向屏幕时隐藏 safari下需加-webkit-才正常*/
-                -webkit-backface-visibility:hidden;
+                -webkit-backface-visibility: hidden;
             }
             .photo .front .image {
                 width: 100%;
