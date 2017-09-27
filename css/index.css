@@ -113,12 +113,12 @@
                 transition: all .8s;
             }
             .nav .i:after{
-                content: "\e7a1";
+                content: "\e600";
                 font-family: "iconfont";
-                font-size: 100%;
+                height: 30px;
                 display: inline-block;
-                line-height: 30px;
                 text-align: center;
+                line-height: 30px;
                 color: #fff;
                 opacity: 0;
             }

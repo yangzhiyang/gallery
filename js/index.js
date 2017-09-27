@@ -16,7 +16,7 @@ var Gallery = (function(){
                                 .replace('{{title}}',this.dataArr[i].title)
                                 .replace('{{describe}}',this.dataArr[i].describe);
                 html.push(_html);
-                nav.push('<span id="nav_'+i+'" class="i">&nbsp</span>');
+                nav.push('<span id="nav_'+i+'" class="i"></span>');
             }
             html.push('<div class="nav">'+ nav.join('') +'</div>');
             document.querySelector('#wrap').innerHTML = html.join(' ');

@@ -1,13 +1,17 @@
-## 一个动态图片展示效果：
+## 一个动态图片展示效果：   
+[效果预览](https://yangzhiyang.github.io/gallery/index.html)
+
+[灵感来源](http://www.17sucai.com/preview/1/2014-12-23/ScatteredPolaroidsGallery/index.html)
 ### 1.页面刷新重新排列图片位置
 ### 2.中间位置随机放大展示其中一张图片。
-### 3.点击其他指定图片或导航按钮，会重新排列位置，并在中间位置展示指定的图片。
-### 4.若点击的图片或导航按钮对应的图片已展示在中间位置，则翻转图片。
+### 3.点击其他指定图片或导航按钮，会重新排列位置，并在中间位置展示指定的图片,对应导航按钮变为展示样式。
+### 4.若点击的图片或导航按钮对应的图片已展示在中间位置，则翻转图片，对应导航按钮同时翻转。
+### 实现思路及相关技术：
+- 图片随机排布的实现： 图片元素绝对定位，通过刷新或点击事件触发图片重新排列，随机产生图片元素css属性left(right)、top的值，实现每次排列都产生图片的随机位置，只要控制left(right)、top值产生的范围，使图片排布在规定的范围内，在产生随机位置的同时给一个随机旋转角度，实现图片排布的随机样式。
+- 图片旋转、翻转的实现： 通过CSS 3的新特实现了3D视图、翻转隐藏、旋转位移和过渡效果等。如`backface-visibility: hidden`设置了当元素不面向屏幕时隐藏，`transform: translate(x,y) rotate(0deg)`定义元素的位移以及旋转角度，`transform-style :preserve-3d`支持了子元素的3D效果，`preserve: 800px`设置了3D元素距本身视图的距离。
+- 通过字符串替换实现简易的模板功能： 通过`replace()`方法,替换在html中写的特殊字符`{{}}`,批量渲染了页面中的图片内容。
+- 解决页面内容分布均匀问题： 将所有图片数据分成两组随机数量的数组，一组设置left值，一组设置right值，使页面内容在左右分区均匀分布。
 ### 存在的问题：
 - Chrome和Firefox下效果最佳，safari下图片重排列效果存在抖动问题，仍在查找兼容方案
 - 若photo back面的内容过多，会导致图片翻转过程中图片偶发的短暂消失，翻转完成后出现，所以设置`overflow：hidden`
 - 代码过于笨重，需简化
- 
-[效果预览](https://yangzhiyang.github.io/gallery/index.html)
-
-[灵感来源](http://www.17sucai.com/preview/1/2014-12-23/ScatteredPolaroidsGallery/index.html)
